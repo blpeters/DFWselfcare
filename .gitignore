@@ -53,3 +53,11 @@ packrat/lib*/
 output
 ImportLog
 GpMessages
+
+# ArcGIS files
+.aprx
+.atbx
+
+.gif
+
+/images
