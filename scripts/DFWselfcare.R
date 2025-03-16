@@ -82,9 +82,9 @@ st_write(df, "output/selfcare2021.shp", append = FALSE)
 # Leaflet Map
 
 # Color palette
-mypalette <- colorNumeric(
+mypalette <- colorQuantile(
   palette = "viridis", domain = df$selfcare_percent,
-  na.color = "transparent"
+  na.color = "transparent", pretty = FALSE, n = 4
 )
 mypalette(c(45, 43))
 
@@ -93,7 +93,7 @@ selfcare_map <- df %>%
   leaflet() %>% 
   setView(lng = -96.97, lat = 32.90, zoom = 9) %>% 
   addTiles(group = "OSM (default)") %>%  
-  addProviderTiles(providers$CartoDB.Positron, group = "Carto B") %>%
+  addProviderTiles(providers$CartoDB.Positron, group = "Carto DB") %>%
   addPolygons(group = "Total", 
               popup = paste(df$tract, "<br>",
                             "Total Population: ", df$estimate, "<br>",
@@ -102,13 +102,14 @@ selfcare_map <- df %>%
               stroke = FALSE,
               smoothFactor = 0,
               fillColor = ~ mypalette(selfcare_percent),
-              fillOpacity = 0.8,) %>% 
+              fillOpacity = 0.6,) %>% 
   addLayersControl(  #Gives you the option to turn on and off different basemaps or layers.
-    baseGroups = c("OSM (default)", "Carto B"),
+    baseGroups = c("Carto DB", "OSM"),
     options = layersControlOptions(collapsed = FALSE)) %>%
   addLegend(
-    pal = mypalette, values = ~selfcare_percent, opacity = 0.9,
-    title = "% Pop. with<br>self-care disability", position = 'bottomleft'
+    pal = mypalette, values = ~selfcare_percent, opacity = 0.7,
+    title = "% Pop. with<br>self-care disability", position = 'bottomleft',
+    labFormat = labelFormat(digits=2, suffix="%")
   )
 
 
